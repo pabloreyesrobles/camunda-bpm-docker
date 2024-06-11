@@ -1,0 +1,21 @@
+xml
+<?xml version="1.0" encoding="UTF-8"?>
+<bpm-platform xmlns="http://www.camunda.org/schema/1.0/BpmPlatform"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.camunda.org/schema/1.0/BpmPlatform http://www.camunda.org/schema/1.0/bpm-platform.xsd">
+
+  <process-engine name="default">
+    <job-acquisition name="default" />
+    <configuration>
+      <property name="jobExecutorActivate">true</property>
+      <property name="history">full</property>
+      <property name="databaseSchemaUpdate">true</property>
+
+      <!-- Enable Authentication for REST API -->
+      <plugin>
+        <class>org.camunda.bpm.engine.rest.security.auth.impl.HttpBasicAuthenticationProvider</class>
+      </plugin>
+    </configuration>
+  </process-engine>
+
+</bpm-platform>
