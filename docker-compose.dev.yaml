@@ -1,0 +1,52 @@
+services:
+  camunda-dev-postgres:
+    image: postgres:latest
+    container_name: camunda-dev-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - camunda-dev-net
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+
+  camunda-dev-bpm:
+    build: .
+    container_name: camunda-dev-bpm
+    environment:
+      DB_DRIVER: org.postgresql.Driver
+      DB_URL: jdbc:postgresql://camunda-dev-postgres:5432/${POSTGRES_DB}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "9090:9090"
+      - "9443:9443"
+    depends_on:
+      - camunda-dev-postgres
+    networks:
+      - camunda-dev-net
+    volumes:
+      - ./web.xml:/camunda/webapps/engine-rest/WEB-INF/web.xml
+
+  pg-dev-backup:
+    image: postgres:latest
+    container_name: pg-dev-backup
+    depends_on:
+      - camunda-dev-postgres
+    volumes:
+      - postgres-dev-backup:/backups
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    entrypoint: ["sh", "-c", "while true; do PGPASSWORD=$POSTGRES_PASSWORD pg_dump -h camunda-dev-postgres -p 5432 -U $POSTGRES_USER $POSTGRES_DB > /backups/backup.sql; sleep 3600; done"]
+    networks:
+      - camunda-dev-net
+
+networks:
+  camunda-dev-net:
+
+volumes:
+  postgres-dev-data:
+  postgres-dev-backup:
