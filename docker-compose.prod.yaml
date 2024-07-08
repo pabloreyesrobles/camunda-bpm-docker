@@ -1,51 +1,51 @@
 services:
-  camunda-postgres:
+  camunda-prod-postgres:
     image: postgres:latest
-    container_name: camunda-postgres
+    container_name: camunda-prod-postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     networks:
-      - camunda-net
+      - camunda-prod-net
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
   camunda-bpm:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
     container_name: camunda-bpm
     environment:
       DB_DRIVER: org.postgresql.Driver
-      DB_URL: jdbc:postgresql://camunda-postgres:5432/${POSTGRES_DB}
+      DB_URL: jdbc:postgresql://camunda-prod-postgres:5432/${POSTGRES_DB}
       DB_USERNAME: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "8080:8080"
-      - "8443:8443"
+      - "9090:8080"
+      - "9443:8443"
     depends_on:
-      - camunda-postgres
+      - camunda-prod-postgres
     networks:
-      - camunda-net
-    volumes:
-      - ./web.xml:/camunda/webapps/engine-rest/WEB-INF/web.xml
+      - camunda-prod-net
 
   pg-backup:
     image: postgres:latest
     container_name: pg-backup
     depends_on:
-      - camunda-postgres
+      - camunda-prod-postgres
     volumes:
       - postgres-backup:/backups
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-    entrypoint: ["sh", "-c", "while true; do PGPASSWORD=$POSTGRES_PASSWORD pg_dump -h camunda-postgres -p 5432 -U $POSTGRES_USER $POSTGRES_DB > /backups/backup.sql; sleep 3600; done"]
+    entrypoint: ["sh", "-c", "while true; do PGPASSWORD=$POSTGRES_PASSWORD pg_dump -h camunda-prod-postgres -p 5432 -U $POSTGRES_USER $POSTGRES_DB > /backups/backup.sql; sleep 3600; done"]
     networks:
-      - camunda-net
+      - camunda-prod-net
 
 networks:
-  camunda-net:
+  camunda-prod-net:
 
 volumes:
   postgres-data:

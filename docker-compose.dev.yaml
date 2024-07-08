@@ -12,7 +12,9 @@ services:
       - postgres-dev-data:/var/lib/postgresql/data
 
   camunda-dev-bpm:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     container_name: camunda-dev-bpm
     environment:
       DB_DRIVER: org.postgresql.Driver
