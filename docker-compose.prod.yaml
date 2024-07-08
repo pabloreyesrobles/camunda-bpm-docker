@@ -9,7 +9,7 @@ services:
     networks:
       - camunda-prod-net
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-prod-data:/var/lib/postgresql/data
 
   camunda-bpm:
     build:
@@ -35,7 +35,7 @@ services:
     depends_on:
       - camunda-prod-postgres
     volumes:
-      - postgres-backup:/backups
+      - postgres-prod-backup:/backups
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -48,5 +48,5 @@ networks:
   camunda-prod-net:
 
 volumes:
-  postgres-data:
-  postgres-backup:
+  postgres-prod-data:
+  postgres-prod-backup:
