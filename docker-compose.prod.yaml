@@ -29,9 +29,9 @@ services:
     networks:
       - camunda-prod-net
 
-  pg-backup:
+  pg-prod-backup:
     image: postgres:latest
-    container_name: pg-backup
+    container_name: pg-prod-backup
     depends_on:
       - camunda-prod-postgres
     volumes:
