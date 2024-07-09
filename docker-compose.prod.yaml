@@ -11,11 +11,11 @@ services:
     volumes:
       - postgres-prod-data:/var/lib/postgresql/data
 
-  camunda-bpm:
+  camunda-prod-bpm:
     build:
       context: .
       dockerfile: Dockerfile.prod
-    container_name: camunda-bpm
+    container_name: camunda-prod-bpm
     environment:
       DB_DRIVER: org.postgresql.Driver
       DB_URL: jdbc:postgresql://camunda-prod-postgres:5432/${POSTGRES_DB}
