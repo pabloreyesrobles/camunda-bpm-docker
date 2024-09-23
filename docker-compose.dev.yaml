@@ -27,7 +27,8 @@ services:
       VIRTUAL_HOST: pcb.intellicore.io
       VIRTUAL_PORT: 8080
       LETSENCRYPT_HOST: pcb.intellicore.io
-      VIRTUAL_PATH: /camunda/app
+      VIRTUAL_PATH: /dev
+      VIRTUAL_DEST: /camunda
     expose:
       - "8080"
       - "8443"
