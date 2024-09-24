@@ -4,7 +4,7 @@ FROM camunda/camunda-bpm-platform:run-latest
 COPY web.xml /camunda/webapps/engine-rest/WEB-INF/web.xml
 
 # Copy the default and production configuration file
-COPY default.yml /camunda/configuration/default.yml
+COPY default-dev.yml /camunda/configuration/default.yml
 COPY production.yml /camunda/configuration/production.yml
 
 # Run the script to create the admin user and then start Camunda

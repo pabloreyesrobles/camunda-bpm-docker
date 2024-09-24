@@ -13,6 +13,8 @@ camunda.bpm:
     example:
       enabled: false
     auth.enabled: true
+  webapp:
+    application-path: /dev/camunda
 
 
 # datasource configuration is required

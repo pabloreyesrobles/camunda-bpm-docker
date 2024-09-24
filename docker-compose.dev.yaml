@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     networks:
-      - camunda-dev-net
+      - proxy-net
     volumes:
       - postgres-dev-data:/var/lib/postgresql/data
 
@@ -21,13 +21,13 @@ services:
       DB_URL: jdbc:postgresql://camunda-dev-postgres:5432/${POSTGRES_DB}
       DB_USERNAME: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - "8080:8080"
-      - "8443:8443"
+    expose:
+      - "8080"
+      - "8443"
     depends_on:
       - camunda-dev-postgres
     networks:
-      - camunda-dev-net
+      - proxy-net
     volumes:
       - ./web.xml:/camunda/webapps/engine-rest/WEB-INF/web.xml
 
@@ -44,10 +44,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     entrypoint: ["sh", "-c", "while true; do PGPASSWORD=$POSTGRES_PASSWORD pg_dump -h camunda-dev-postgres -p 5432 -U $POSTGRES_USER $POSTGRES_DB > /backups/backup.sql; sleep 3600; done"]
     networks:
-      - camunda-dev-net
+      - proxy-net
 
 networks:
-  camunda-dev-net:
+  proxy-net:
+    external: true
 
 volumes:
   postgres-dev-data:
